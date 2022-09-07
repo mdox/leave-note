@@ -1,0 +1,3 @@
+CREATE DATABASE test;
+CREATE DATABASE development;
+CREATE DATABASE production;

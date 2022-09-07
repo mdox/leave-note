@@ -2,17 +2,14 @@ import { readFileSync } from "fs";
 import type { Knex } from "knex";
 import { resolve } from "path";
 
-const client = "postgresql";
-const user = "postgres";
-const password = () =>
-  readFileSync(resolve("./secrets/postgres_password"), "utf-8");
-
 const createConfig = (database: string): Knex.Config => ({
-  client,
+  client: "postgresql",
   connection: {
+    port: 7621,
     database,
-    user,
-    password,
+    user: "postgres",
+    password: () =>
+      readFileSync(resolve("./secrets/postgres_password"), "utf-8"),
   },
 });
 
