@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Web App for centralized place for text notes for multiple users.",
   "scripts": {
-    "postinstall": "npm --prefix client install",
-    "build": "npm --prefix client run build",
-    "dev": "concurrently 'npm --prefix client run dev'",
-    "serve": "concurrently 'npm --prefix client run preview'"
+    "postinstall": "npm --prefix client install && npm --prefix server install",
+    "build": "npm --prefix client run build && npm --prefix server run build",
+    "dev": "concurrently 'npm --prefix client run dev' 'npm --prefix server run dev'",
+    "serve": "concurrently 'npm --prefix client run preview' 'npm --prefix server run serve'"
   },
   "keywords": [],
   "author": "",
