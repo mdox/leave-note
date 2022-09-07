@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon",
     "build": "NODE_ENV=production tsc",
-    "serve": "NODE_ENV=production node dist"
+    "serve": "NODE_ENV=production node dist",
+    "db:up": "docker-compose up -d",
+    "db:down": "docker-compose down"
   },
   "keywords": [],
   "author": "",
