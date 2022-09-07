@@ -1,0 +1,17 @@
+{
+  "name": "leave-notes-1",
+  "version": "1.0.0",
+  "description": "Web App for centralized place for text notes for multiple users.",
+  "scripts": {
+    "postinstall": "npm --prefix client install",
+    "build": "npm --prefix client run build",
+    "dev": "concurrently 'npm --prefix client run dev'",
+    "serve": "concurrently 'npm --prefix client run preview'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPLv3",
+  "dependencies": {
+    "concurrently": "^7.4.0"
+  }
+}
