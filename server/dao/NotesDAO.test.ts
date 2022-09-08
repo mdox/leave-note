@@ -28,6 +28,8 @@ describe("NotesDAO", () => {
 
     expect(firstNote).toBeDefined();
 
+    if (!firstNote) return;
+
     const result = await NotesDAO.getNoteById(firstNote.id);
 
     expect(result).toBeDefined();
@@ -44,12 +46,17 @@ describe("NotesDAO", () => {
 
     expect(noteBefore).toBeDefined();
 
+    if (!noteBefore) return;
+
     const noteAfter = await NotesDAO.updateNote(noteBefore.id, {
       title: "Test - " + Date.now(),
       content: "Test Content - " + Date.now(),
     });
 
     expect(noteAfter).toBeDefined();
+
+    if (!noteAfter) return;
+
     expect(noteAfter.title).not.toEqual(noteBefore.title);
     expect(noteAfter.content).not.toEqual(noteBefore.content);
     expect(noteAfter.created_at).toEqual(noteBefore.created_at);
