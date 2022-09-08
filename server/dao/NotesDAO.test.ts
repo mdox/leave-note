@@ -2,12 +2,12 @@ import NotesDAO from "./NotesDAO";
 
 describe("NotesDAO", () => {
   it("createNote", async () => {
-    const results = await NotesDAO.createNote({
+    const result = await NotesDAO.createNote({
       title: "Test",
       content: "Test Content...",
     });
 
-    expect(results).toBeDefined();
+    expect(result).toBeDefined();
   });
 
   it("getAllNotes", async () => {
