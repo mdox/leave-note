@@ -9,6 +9,7 @@
     "serve": "NODE_ENV=production node dist",
     "db:up": "docker-compose up -d",
     "db:down": "docker-compose down",
+    "db:migrate:latest": "for env in test development production; do npx knex migrate:latest --env $env; done",
     "test": "NODE_ENV=test jest --detectOpenHandles --forceExit"
   },
   "keywords": [],
