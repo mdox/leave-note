@@ -1,5 +1,9 @@
 import { PropsWithChildren } from "react";
 
 export function Layout(props: PropsWithChildren) {
-  return <>{props.children}</>;
+  return (
+    <div className="mx-auto max-w-screen-md text-stone-900">
+      {props.children}
+    </div>
+  );
 }
