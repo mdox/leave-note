@@ -6,10 +6,10 @@ export async function up(knex: Knex): Promise<void> {
     table.string("title").defaultTo("");
     table.text("content").defaultTo("");
     table
-      .timestamp("created_at", { useTz: false, precision: 6 })
+      .timestamp("created_at", { useTz: true, precision: 6 })
       .defaultTo(knex.fn.now(6));
     table
-      .timestamp("updated_at", { useTz: false, precision: 6 })
+      .timestamp("updated_at", { useTz: true, precision: 6 })
       .defaultTo(knex.fn.now(6));
   });
 }
