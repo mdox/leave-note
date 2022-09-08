@@ -17,8 +17,18 @@ describe("NotesDAO", () => {
     expect(results.length).toBeGreaterThanOrEqual(1);
   });
 
+  it("getFirstNote", async () => {
+    const result = await NotesDAO.getFirstNote();
+
+    expect(result).toBeDefined();
+  });
+
   it("getNoteById", async () => {
-    const result = await NotesDAO.getNoteById(1);
+    const firstNote = await NotesDAO.getFirstNote();
+
+    expect(firstNote).toBeDefined();
+
+    const result = await NotesDAO.getNoteById(firstNote.id);
 
     expect(result).toBeDefined();
   });
@@ -30,18 +40,20 @@ describe("NotesDAO", () => {
   });
 
   it("updateNote", async () => {
-    const noteBefore = await NotesDAO.getNoteById(1);
+    const noteBefore = await NotesDAO.getFirstNote();
 
     expect(noteBefore).toBeDefined();
 
-    const noteAfter = await NotesDAO.updateNote(1, {
+    const noteAfter = await NotesDAO.updateNote(noteBefore.id, {
       title: "Test - " + Date.now(),
       content: "Test Content - " + Date.now(),
     });
 
     expect(noteAfter).toBeDefined();
-    expect(noteAfter.title === noteBefore.title).toBeFalsy();
-    expect(noteAfter.content === noteBefore.content).toBeFalsy();
+    expect(noteAfter.title).not.toEqual(noteBefore.title);
+    expect(noteAfter.content).not.toEqual(noteBefore.content);
+    expect(noteAfter.created_at).toEqual(noteBefore.created_at);
+    expect(noteAfter.updated_at).not.toEqual(noteBefore.updated_at);
   });
 
   it("updateNote must fail", async () => {

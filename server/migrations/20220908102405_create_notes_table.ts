@@ -5,8 +5,12 @@ export async function up(knex: Knex): Promise<void> {
     table.increments("id");
     table.string("title").defaultTo("");
     table.text("content").defaultTo("");
-    table.specificType("created_at", "DATETIME(6)").defaultTo(knex.fn.now(6));
-    table.specificType("updated_at", "DATETIME(6)").defaultTo(knex.fn.now(6));
+    table
+      .timestamp("created_at", { useTz: false, precision: 6 })
+      .defaultTo(knex.fn.now(6));
+    table
+      .timestamp("updated_at", { useTz: false, precision: 6 })
+      .defaultTo(knex.fn.now(6));
   });
 }
 
