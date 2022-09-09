@@ -1,15 +1,15 @@
-[class^="button"] {
+[class*="button"] {
   @apply flex items-center justify-center gap-2 px-3 py-1 bg-neutral-500 rounded shadow text-stone-50 font-semibold disabled:opacity-75;
+}
 
-  &[class$="-submit"] {
-    @apply bg-blue-500;
-  }
+[class*="button-submit"] {
+  @apply bg-blue-500;
+}
 
-  &[class$="-warning"] {
-    @apply bg-yellow-500;
-  }
+[class*="button-warning"] {
+  @apply bg-yellow-500;
+}
 
-  &[class$="-danger"] {
-    @apply bg-red-500;
-  }
+[class*="button-danger"] {
+  @apply bg-red-500;
 }
