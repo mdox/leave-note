@@ -132,8 +132,8 @@ export function NoteArticle(props: NoteArticleProps) {
 
   // Renders
   return (
-    <div className="flex flex-col rounded-lg bg-white shadow p-2 gap-2">
-      <div className="flex items-center justify-between p-2 rounded-t bg-pink-100 gap-2">
+    <div className="flex flex-col gap-2 p-2 bg-white rounded-lg shadow">
+      <div className="flex items-center justify-between gap-2 p-2 bg-pink-100 rounded-t">
         <Show when={stateIsEditing}>
           <input
             type="text"
@@ -146,14 +146,14 @@ export function NoteArticle(props: NoteArticleProps) {
           <h3 className="text-xl">{stateTitle || "Untitled"}</h3>
         </Show>
         <div className="flex items-center gap-2">
-          <span className="shrink-0 text-sm text-neutral-600">
+          <span className="text-sm shrink-0 text-neutral-600">
             {memoUpdatedAtFormattedText}
           </span>
 
           <Show when={!stateIsEditing}>
             <button
               type="button"
-              className="bg-yellow-500 text-stone-50 rounded shadow py-1 px-3"
+              className="button-warning"
               onClick={() => setStateIsEditing(true)}
             >
               Edit
@@ -161,12 +161,12 @@ export function NoteArticle(props: NoteArticleProps) {
           </Show>
         </div>
       </div>
-      {/* <div className="bg-neutral-100 h-1 rounded"></div> */}
+      {/* <div className="h-1 rounded bg-neutral-100"></div> */}
       <div className="p-2 rounded-b bg-fuchsia-100">
         <Show when={stateIsEditing}>
           <textarea
             value={stateContent}
-            className="w-full"
+            className="w-full grow resize-none"
             onChange={(e) => setStateContent(e.currentTarget.value)}
           ></textarea>
         </Show>
@@ -180,7 +180,7 @@ export function NoteArticle(props: NoteArticleProps) {
             <Show when={!props.isCreating}>
               <button
                 type="button"
-                className="bg-red-500 text-stone-50 rounded shadow py-1 px-3"
+                className="button-danger"
                 onClick={onDelete}
               >
                 Delete
@@ -189,18 +189,10 @@ export function NoteArticle(props: NoteArticleProps) {
           </div>
 
           <div className="flex gap-2">
-            <button
-              type="button"
-              className="bg-neutral-500 text-stone-50 rounded shadow py-1 px-3"
-              onClick={onCancel}
-            >
+            <button type="button" className="button" onClick={onCancel}>
               Cancel
             </button>
-            <button
-              type="submit"
-              className="bg-blue-500 text-stone-50 rounded shadow py-1 px-3"
-              onClick={onSave}
-            >
+            <button type="submit" className="button-submit" onClick={onSave}>
               Save
             </button>
           </div>

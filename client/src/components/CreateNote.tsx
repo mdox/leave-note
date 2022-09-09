@@ -24,7 +24,7 @@ export function CreateNote(props: CreateNoteProps) {
         <div className="flex justify-end">
           <button
             type="button"
-            className="px-3 py-1 bg-blue-500 text-stone-50 rounded shadow flex items-center justify-center gap-2"
+            className="button-submit"
             onClick={() => setStateIsCreatingNewNote(true)}
           >
             <PlusIcon width={24} height={24} />
@@ -44,6 +44,7 @@ export function CreateNote(props: CreateNoteProps) {
           isCreating={true}
           onCancelled={() => setStateIsCreatingNewNote(false)}
           onSaved={onSaved}
+          onDeleted={() => {}}
         />
       </Show>
     </>

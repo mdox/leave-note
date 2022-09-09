@@ -1,0 +1,19 @@
+h1 {
+  @apply lg:text-3xl md:text-2xl text-xl;
+}
+
+h2 {
+  @apply lg:text-2xl md:text-xl text-lg;
+}
+
+h3 {
+  @apply lg:text-xl md:text-lg text-base;
+}
+
+button {
+  @apply text-base;
+}
+
+p {
+  @apply text-base;
+}

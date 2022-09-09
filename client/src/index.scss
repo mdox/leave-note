@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @import "./styles/font-sizes.scss";
+
+  textarea,
+  input[type="text"] {
+    @apply px-2 py-1 block rounded min-w-0 basis-0 min-h-[2.125em];
+  }
+}
+
+@layer components {
+  @import "./styles/button.scss";
+}
