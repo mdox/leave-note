@@ -6,6 +6,7 @@ import {
   NotePostUpdateProps,
 } from "../lib/server-lib/types";
 import { useDefaultedState } from "../lib/useDefaultedState";
+import { Field } from "./Field";
 import { MessageBox } from "./MessageBox";
 import { Show } from "./Show";
 
@@ -219,17 +220,18 @@ export function NoteArticle(props: NoteArticleProps) {
       )}
     >
       <div className="flex items-center justify-between gap-2 p-2 bg-pink-100 rounded-t">
-        <Show when={stateIsEditing}>
-          <input
-            type="text"
-            value={stateTitle}
-            className="grow"
-            onChange={(e) => setStateTitle(e.currentTarget.value)}
-          />
-        </Show>
-        <Show when={!stateIsEditing}>
-          <h3 className="text-xl">{stateTitle || "Untitled"}</h3>
-        </Show>
+        <Field
+          isEditing={stateIsEditing}
+          view={() => <h3 className="text-xl">{stateTitle || "Untitled"}</h3>}
+          edit={() => (
+            <input
+              type="text"
+              value={stateTitle}
+              className="grow"
+              onChange={(e) => setStateTitle(e.currentTarget.value)}
+            />
+          )}
+        />
         <div className="flex items-center gap-2">
           <span className="text-sm shrink-0 text-neutral-600">
             {memoUpdatedAtFormattedText}
@@ -248,16 +250,17 @@ export function NoteArticle(props: NoteArticleProps) {
       </div>
       {/* <div className="h-1 rounded bg-neutral-100"></div> */}
       <div className="p-2 rounded-b bg-fuchsia-100 grow flex flex-col">
-        <Show when={stateIsEditing}>
-          <textarea
-            value={stateContent}
-            className="w-full grow resize-none"
-            onChange={(e) => setStateContent(e.currentTarget.value)}
-          ></textarea>
-        </Show>
-        <Show when={!stateIsEditing}>
-          <p className="whitespace-pre-wrap">{stateContent}</p>
-        </Show>
+        <Field
+          isEditing={stateIsEditing}
+          view={() => <p className="whitespace-pre-wrap">{stateContent}</p>}
+          edit={() => (
+            <textarea
+              value={stateContent}
+              className="w-full grow resize-none"
+              onChange={(e) => setStateContent(e.currentTarget.value)}
+            ></textarea>
+          )}
+        />
       </div>
       <Show when={stateIsEditing}>
         <div className="flex justify-between gap-2">
