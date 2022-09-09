@@ -1,3 +1,4 @@
+import { XMarkIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -6,6 +7,7 @@ import {
   NotePostUpdateProps,
 } from "../lib/server-lib/types";
 import { useDefaultedState } from "../lib/useDefaultedState";
+import Modal from "./Modal";
 import { Show } from "./Show";
 
 export interface NoteArticleProps extends NotePostProps {
@@ -29,6 +31,8 @@ export function NoteArticle(props: NoteArticleProps) {
   const [stateIsEditing, setStateIsEditing] = useState(props.isEditing);
   const [stateUpdatedAt, setStateUpdatedAt] = useState(props.updated_at);
   const [stateDisableAPIButtons, setStateDisableAPIButtons] = useState(false);
+  const [stateErrorsModalIsShow, setStateErrorsModalIsShow] = useState(false);
+  const [stateErrors, setStateErrors] = useState<string[]>([]);
 
   // Refs
   const refFrame = useRef<HTMLDivElement>(null);
@@ -46,6 +50,18 @@ export function NoteArticle(props: NoteArticleProps) {
 
     return [dateText, timeText].join(" ");
   }, [stateUpdatedAt]);
+
+  // Methods
+  function validate() {
+    let errors: string[] = [];
+
+    if (stateTitle.length === 0) errors.push("Title is too short.");
+    if (stateTitle.length > 255) errors.push("Title is too long.");
+    if (stateContent.length === 0) errors.push("Content is too short.");
+    if (stateContent.length > 5000) errors.push("Content is too long.");
+
+    return errors.length > 0 ? errors : true;
+  }
 
   // Events
   async function onDelete() {
@@ -76,6 +92,14 @@ export function NoteArticle(props: NoteArticleProps) {
   }
 
   async function onSave() {
+    const validationResult = validate();
+
+    if (validationResult !== true) {
+      setStateErrors(validationResult);
+      setStateErrorsModalIsShow(true);
+      return;
+    }
+
     setStateDisableAPIButtons(true);
 
     try {
@@ -237,6 +261,35 @@ export function NoteArticle(props: NoteArticleProps) {
             </button>
           </div>
         </div>
+      </Show>
+
+      <Show when={stateErrorsModalIsShow}>
+        <Modal>
+          <div className="fixed inset-0 bg-stone-900 bg-opacity-25 flex flex-col items-center justify-center p-2">
+            <div className="max-w-screen-sm w-full p-2 bg-stone-50 rounded-xl shadow shadow-red-400 flex flex-col gap-2">
+              <div className="flex justify-between">
+                <div className="flex items-center">
+                  <h2 className="pl-2">Save Errors</h2>
+                </div>
+                <div className="flex items-center">
+                  <button
+                    type="button"
+                    className="button-danger rounded-full p-0 w-10 h-10"
+                    onClick={() => setStateErrorsModalIsShow(false)}
+                  >
+                    <XMarkIcon width={24} height={24} />
+                  </button>
+                </div>
+              </div>
+              <div className="h-[2px] bg-red-200 shadow shadow-red-200 rounded-full"></div>
+              <div className="flex flex-col py-1">
+                {stateErrors.map((error) => (
+                  <p key={error}>❌ {error}</p>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Modal>
       </Show>
     </div>
   );
