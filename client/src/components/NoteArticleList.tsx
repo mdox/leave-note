@@ -1,17 +1,23 @@
+import { NotePostProps } from "../lib/server-lib/types";
 import { NoteArticle } from "./NoteArticle";
 
-export interface NoteArticleListProps {}
+export interface NoteArticleListProps {
+  items: NotePostProps[];
+}
 
 export function NoteArticleList(props: NoteArticleListProps) {
   return (
-    <>
-      <NoteArticle
-        id={0}
-        title="Dummy Title"
-        content="Dummy Content..."
-        created_at={new Date()}
-        updated_at={new Date()}
-      />
-    </>
+    <div className="flex flex-col gap-2">
+      {props.items.map((item) => (
+        <NoteArticle
+          key={item.id}
+          {...item}
+          isEditing={false}
+          isCreating={false}
+          onSaved={() => {}}
+          onCancelled={() => {}}
+        />
+      ))}
+    </div>
   );
 }
