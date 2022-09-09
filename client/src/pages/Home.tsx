@@ -21,8 +21,12 @@ export function Home(props: HomeProps) {
   }, [items]);
 
   // Events
+  async function onDeleted() {
+    await mutateItems();
+  }
+
   async function onCreated() {
-    mutateItems();
+    await mutateItems();
   }
 
   // Renders
@@ -41,7 +45,7 @@ export function Home(props: HomeProps) {
 
       <CreateNote onCreated={onCreated} />
 
-      <NoteArticleList items={items ?? []} />
+      <NoteArticleList items={items ?? []} onDeleted={onDeleted} />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { NoteArticle } from "./NoteArticle";
 
 export interface NoteArticleListProps {
   items: NotePostProps[];
+  onDeleted: () => void;
 }
 
 export function NoteArticleList(props: NoteArticleListProps) {
@@ -16,6 +17,7 @@ export function NoteArticleList(props: NoteArticleListProps) {
           isCreating={false}
           onSaved={() => {}}
           onCancelled={() => {}}
+          onDeleted={props.onDeleted}
         />
       ))}
     </div>

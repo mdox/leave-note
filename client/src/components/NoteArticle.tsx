@@ -12,6 +12,7 @@ export interface NoteArticleProps extends NotePostProps {
   isCreating: boolean;
   onSaved: () => void;
   onCancelled: () => void;
+  onDeleted: () => void;
 }
 
 export function NoteArticle(props: NoteArticleProps) {
@@ -42,6 +43,18 @@ export function NoteArticle(props: NoteArticleProps) {
   }, [stateUpdatedAt]);
 
   // Events
+  async function onDelete() {
+    const response = await fetch("/api/note/" + props.id, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      setStateIsEditing(false);
+
+      props.onDeleted();
+    }
+  }
+
   function onCancel() {
     setStateIsEditing(false);
     resetStateTitle();
@@ -162,21 +175,35 @@ export function NoteArticle(props: NoteArticleProps) {
         </Show>
       </div>
       <Show when={stateIsEditing}>
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            className="bg-neutral-500 text-stone-50 rounded shadow py-1 px-3"
-            onClick={onCancel}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            className="bg-blue-500 text-stone-50 rounded shadow py-1 px-3"
-            onClick={onSave}
-          >
-            Save
-          </button>
+        <div className="flex justify-between gap-2">
+          <div className="flex gap-2">
+            <Show when={!props.isCreating}>
+              <button
+                type="button"
+                className="bg-red-500 text-stone-50 rounded shadow py-1 px-3"
+                onClick={onDelete}
+              >
+                Delete
+              </button>
+            </Show>
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className="bg-neutral-500 text-stone-50 rounded shadow py-1 px-3"
+              onClick={onCancel}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-500 text-stone-50 rounded shadow py-1 px-3"
+              onClick={onSave}
+            >
+              Save
+            </button>
+          </div>
         </div>
       </Show>
     </div>
