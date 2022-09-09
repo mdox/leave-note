@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import clsx from "clsx";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   NotePostCreateProps,
   NotePostProps,
@@ -27,6 +28,9 @@ export function NoteArticle(props: NoteArticleProps) {
   ] = useDefaultedState(props.content);
   const [stateIsEditing, setStateIsEditing] = useState(props.isEditing);
   const [stateUpdatedAt, setStateUpdatedAt] = useState(props.updated_at);
+
+  // Refs
+  const refFrame = useRef<HTMLDivElement>(null);
 
   // Memos
   const memoUpdatedAtFormattedText = useMemo(() => {
@@ -130,9 +134,22 @@ export function NoteArticle(props: NoteArticleProps) {
     setStateUpdatedAt(props.updated_at);
   }, [props.updated_at]);
 
+  useEffect(() => {
+    if (!stateIsEditing) return;
+    if (!refFrame.current) return;
+
+    refFrame.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [stateIsEditing]);
+
   // Renders
   return (
-    <div className="flex flex-col gap-2 p-2 bg-white rounded-lg shadow">
+    <div
+      ref={refFrame}
+      className={clsx(
+        "flex flex-col gap-2 p-2 bg-white rounded-lg shadow",
+        stateIsEditing && "min-h-[calc(100vh-1rem)]"
+      )}
+    >
       <div className="flex items-center justify-between gap-2 p-2 bg-pink-100 rounded-t">
         <Show when={stateIsEditing}>
           <input
@@ -162,7 +179,7 @@ export function NoteArticle(props: NoteArticleProps) {
         </div>
       </div>
       {/* <div className="h-1 rounded bg-neutral-100"></div> */}
-      <div className="p-2 rounded-b bg-fuchsia-100">
+      <div className="p-2 rounded-b bg-fuchsia-100 grow flex flex-col">
         <Show when={stateIsEditing}>
           <textarea
             value={stateContent}
