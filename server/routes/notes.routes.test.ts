@@ -63,7 +63,7 @@ describe("notes.routes", () => {
       .put(`/note/${subjectNotePostData.id}`)
       .send(newNotePostUpdateData);
 
-    expect(result.statusCode).toBe(201);
+    expect(result.statusCode).toBe(200);
 
     const updatedNotePostData = result.body as NotePostProps;
 
