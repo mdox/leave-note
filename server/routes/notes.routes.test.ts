@@ -30,6 +30,23 @@ describe("notes.routes", () => {
     expect(newNotePostData.content).toBe(newNotePostCreateData.content);
   });
 
+  it("DELETE /note/:noteId", async () => {
+    const deletingNotePostData = await NotesService.createNote({
+      title: "Delete",
+      content: "Delete",
+    });
+
+    expect(deletingNotePostData).toBeDefined();
+
+    if (!deletingNotePostData) return;
+
+    const response = await supertest(app).delete(
+      `/note/${deletingNotePostData.id}`
+    );
+
+    expect(response.statusCode).toBe(204);
+  });
+
   it("PUT /note/:noteId", async () => {
     const subjectNotePostData = await NotesService.getFirstNote();
 

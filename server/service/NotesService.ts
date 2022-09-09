@@ -6,6 +6,10 @@ const NotesService = {
     return await NotesDAO.createNote(data);
   },
 
+  async deleteNote(id: number) {
+    return await NotesDAO.deleteNote(id);
+  },
+
   async getAllNotes() {
     return await NotesDAO.getAllNotes();
   },

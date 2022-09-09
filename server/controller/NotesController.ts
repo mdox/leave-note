@@ -78,6 +78,23 @@ const NotesController = {
       res.status(201).json(result);
     });
   },
+
+  async deleteNote(req: Request, res: Response) {
+    const noteId = parseInt(req.params.noteId);
+
+    if (isNaN(noteId)) return res.status(400).send(null);
+
+    await sendInternalErrorOnFail(res, async () => {
+      const deletesCount = await NotesService.deleteNote(noteId);
+
+      if (deletesCount !== 1) {
+        res.status(500).send(null);
+        return;
+      }
+
+      res.status(204).send(null);
+    });
+  },
 };
 
 export default NotesController;

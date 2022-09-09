@@ -15,6 +15,11 @@ const NotesDAO = {
     }
   },
 
+  async deleteNote(id: number) {
+    const deletesCount = await db("notes").where({ id }).delete();
+    return deletesCount;
+  },
+
   async getAllNotes() {
     return (await db("notes")) as NotePostProps[];
   },

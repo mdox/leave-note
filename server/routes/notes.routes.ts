@@ -7,5 +7,6 @@ notesRouter.get("/notes", NotesController.getAllNotes);
 notesRouter.get("/note/:noteId", NotesController.getNoteById);
 notesRouter.put("/note/:noteId", NotesController.updateNote);
 notesRouter.post("/note", NotesController.createNote);
+notesRouter.delete("/note/:noteId", NotesController.deleteNote);
 
 export default notesRouter;

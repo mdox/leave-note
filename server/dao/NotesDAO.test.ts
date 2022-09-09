@@ -10,6 +10,21 @@ describe("NotesDAO", () => {
     expect(result).toBeDefined();
   });
 
+  it("deleteNote", async () => {
+    const note = await NotesDAO.createNote({
+      title: "For Delete",
+      content: "For Delete",
+    });
+
+    expect(note).toBeDefined();
+
+    if (!note) return;
+
+    const deletesCount = await NotesDAO.deleteNote(note.id);
+
+    expect(deletesCount).toBe(1);
+  });
+
   it("getAllNotes", async () => {
     const results = await NotesDAO.getAllNotes();
 
