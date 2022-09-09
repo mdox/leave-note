@@ -2,8 +2,8 @@ export type NotePostProps = {
   id: number;
   title: string;
   content: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 };
 
 export type NotePostCreateProps = Pick<NotePostProps, "title" | "content">;
