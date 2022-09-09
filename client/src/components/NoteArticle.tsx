@@ -28,6 +28,7 @@ export function NoteArticle(props: NoteArticleProps) {
   ] = useDefaultedState(props.content);
   const [stateIsEditing, setStateIsEditing] = useState(props.isEditing);
   const [stateUpdatedAt, setStateUpdatedAt] = useState(props.updated_at);
+  const [stateDisableAPIButtons, setStateDisableAPIButtons] = useState(false);
 
   // Refs
   const refFrame = useRef<HTMLDivElement>(null);
@@ -48,15 +49,23 @@ export function NoteArticle(props: NoteArticleProps) {
 
   // Events
   async function onDelete() {
-    const response = await fetch("/api/note/" + props.id, {
-      method: "DELETE",
-    });
+    setStateDisableAPIButtons(true);
 
-    if (response.ok) {
-      setStateIsEditing(false);
+    try {
+      const response = await fetch("/api/note/" + props.id, {
+        method: "DELETE",
+      });
 
-      props.onDeleted();
+      if (response.ok) {
+        setStateIsEditing(false);
+
+        props.onDeleted();
+      }
+    } catch (e) {
+      console.log(e);
     }
+
+    setStateDisableAPIButtons(false);
   }
 
   function onCancel() {
@@ -67,52 +76,60 @@ export function NoteArticle(props: NoteArticleProps) {
   }
 
   async function onSave() {
-    if (props.isCreating) {
-      const newData: NotePostCreateProps = {
-        title: stateTitle,
-        content: stateContent,
-      };
+    setStateDisableAPIButtons(true);
 
-      const response = await fetch("/api/note", {
-        body: JSON.stringify(newData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      });
+    try {
+      if (props.isCreating) {
+        const newData: NotePostCreateProps = {
+          title: stateTitle,
+          content: stateContent,
+        };
 
-      if (response.ok) {
-        props.onSaved();
+        const response = await fetch("/api/note", {
+          body: JSON.stringify(newData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+        });
+
+        if (response.ok) {
+          props.onSaved();
+        }
+      } else {
+        const newData: NotePostUpdateProps = {
+          title: stateTitle,
+          content: stateContent,
+        };
+
+        const response = await fetch("/api/note/" + props.id, {
+          body: JSON.stringify(newData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "PUT",
+        });
+
+        if (response.ok) {
+          const data: NotePostProps = await response.json();
+
+          setDefaultStateTitle(data.title);
+          setDefaultStateContent(data.content);
+
+          setStateTitle(data.title);
+          setStateContent(data.content);
+          setStateUpdatedAt(data.updated_at);
+
+          setStateIsEditing(false);
+
+          props.onSaved();
+        }
       }
-    } else {
-      const newData: NotePostUpdateProps = {
-        title: stateTitle,
-        content: stateContent,
-      };
-
-      const response = await fetch("/api/note/" + props.id, {
-        body: JSON.stringify(newData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-      });
-
-      if (response.ok) {
-        const data: NotePostProps = await response.json();
-
-        setDefaultStateTitle(data.title);
-        setDefaultStateContent(data.content);
-
-        setStateTitle(data.title);
-        setStateContent(data.content);
-        setStateUpdatedAt(data.updated_at);
-
-        setStateIsEditing(false);
-
-        props.onSaved();
-      }
+    } catch (e) {
+      console.log(e);
     }
+
+    setStateDisableAPIButtons(false);
   }
 
   // Effects
@@ -197,6 +214,7 @@ export function NoteArticle(props: NoteArticleProps) {
             <Show when={!props.isCreating}>
               <button
                 type="button"
+                disabled={stateDisableAPIButtons}
                 className="button-danger"
                 onClick={onDelete}
               >
@@ -209,7 +227,12 @@ export function NoteArticle(props: NoteArticleProps) {
             <button type="button" className="button" onClick={onCancel}>
               Cancel
             </button>
-            <button type="submit" className="button-submit" onClick={onSave}>
+            <button
+              type="submit"
+              disabled={stateDisableAPIButtons}
+              className="button-submit"
+              onClick={onSave}
+            >
               Save
             </button>
           </div>
