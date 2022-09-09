@@ -1,4 +1,3 @@
-import { XMarkIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -7,7 +6,7 @@ import {
   NotePostUpdateProps,
 } from "../lib/server-lib/types";
 import { useDefaultedState } from "../lib/useDefaultedState";
-import Modal from "./Modal";
+import { MessageBox } from "./MessageBox";
 import { Show } from "./Show";
 
 export interface NoteArticleProps extends NotePostProps {
@@ -20,22 +19,33 @@ export interface NoteArticleProps extends NotePostProps {
 
 export function NoteArticle(props: NoteArticleProps) {
   // States
-  const [stateTitle, setStateTitle, resetStateTitle, setDefaultStateTitle] =
-    useDefaultedState(props.title);
+  const [
+    stateTitle,
+    setStateTitle,
+    resetStateTitle,
+    setDefaultStateTitle,
+    refDefaultTitle,
+  ] = useDefaultedState(props.title);
   const [
     stateContent,
     setStateContent,
     resetStateContent,
     setDefaultStateContent,
+    refDefaultContent,
   ] = useDefaultedState(props.content);
   const [stateIsEditing, setStateIsEditing] = useState(props.isEditing);
   const [stateUpdatedAt, setStateUpdatedAt] = useState(props.updated_at);
   const [stateDisableAPIButtons, setStateDisableAPIButtons] = useState(false);
   const [stateErrorsModalIsShow, setStateErrorsModalIsShow] = useState(false);
   const [stateErrors, setStateErrors] = useState<string[]>([]);
+  const [stateWarningModalIsShow, setStateWarningModalIsShow] = useState(false);
+  const [stateWarningModalTitle, setStateWarningModalTitle] = useState("");
+  const [stateWarningModalContent, setStateWarningModalContent] = useState("");
+  const [stateDeleteModalIsShow, setStateDeleteModalIsShow] = useState(false);
 
   // Refs
   const refFrame = useRef<HTMLDivElement>(null);
+  const refModalActionSubmit = useRef(() => {});
 
   // Memos
   const memoUpdatedAtFormattedText = useMemo(() => {
@@ -85,10 +95,27 @@ export function NoteArticle(props: NoteArticleProps) {
   }
 
   function onCancel() {
-    setStateIsEditing(false);
-    resetStateTitle();
-    resetStateContent();
-    props.onCancelled();
+    const cancel = () => {
+      setStateIsEditing(false);
+      setStateWarningModalIsShow(false);
+      resetStateTitle();
+      resetStateContent();
+      props.onCancelled();
+    };
+
+    if (
+      refDefaultTitle.current !== stateTitle ||
+      refDefaultContent.current !== stateContent
+    ) {
+      refModalActionSubmit.current = cancel;
+      setStateWarningModalTitle("Unsaved Cancel");
+      setStateWarningModalContent(
+        "Do you really want to cancel the procedure? Your changes are getting lost."
+      );
+      setStateWarningModalIsShow(true);
+    } else {
+      cancel();
+    }
   }
 
   async function onSave() {
@@ -240,7 +267,7 @@ export function NoteArticle(props: NoteArticleProps) {
                 type="button"
                 disabled={stateDisableAPIButtons}
                 className="button-danger"
-                onClick={onDelete}
+                onClick={() => setStateDeleteModalIsShow(true)}
               >
                 Delete
               </button>
@@ -263,33 +290,44 @@ export function NoteArticle(props: NoteArticleProps) {
         </div>
       </Show>
 
+      <Show when={stateDeleteModalIsShow}>
+        <MessageBox
+          type="Danger"
+          title="Delete"
+          actions={["Submit"]}
+          onAction={() => onDelete()}
+          onClose={() => setStateDeleteModalIsShow(false)}
+        >
+          <p className="whitespace-pre-wrap">
+            {`This process is removing the note completely.\nPress 'Submit' to continue the deletion process.`}
+          </p>
+        </MessageBox>
+      </Show>
+
+      <Show when={stateWarningModalIsShow}>
+        <MessageBox
+          type="Warning"
+          title={stateWarningModalTitle}
+          actions={["OK"]}
+          onAction={() => refModalActionSubmit.current()}
+          onClose={() => setStateWarningModalIsShow(false)}
+        >
+          <p>{stateWarningModalContent}</p>
+        </MessageBox>
+      </Show>
+
       <Show when={stateErrorsModalIsShow}>
-        <Modal>
-          <div className="fixed inset-0 bg-stone-900 bg-opacity-25 flex flex-col items-center justify-center p-2">
-            <div className="max-w-screen-sm w-full p-2 bg-stone-50 rounded-xl shadow shadow-red-400 flex flex-col gap-2">
-              <div className="flex justify-between">
-                <div className="flex items-center">
-                  <h2 className="pl-2">Save Errors</h2>
-                </div>
-                <div className="flex items-center">
-                  <button
-                    type="button"
-                    className="button-danger rounded-full p-0 w-10 h-10"
-                    onClick={() => setStateErrorsModalIsShow(false)}
-                  >
-                    <XMarkIcon width={24} height={24} />
-                  </button>
-                </div>
-              </div>
-              <div className="h-[2px] bg-red-200 shadow shadow-red-200 rounded-full"></div>
-              <div className="flex flex-col py-1">
-                {stateErrors.map((error) => (
-                  <p key={error}>❌ {error}</p>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Modal>
+        <MessageBox
+          type="Danger"
+          title="Errors"
+          actions={[]}
+          onAction={() => setStateErrorsModalIsShow(false)}
+          onClose={() => setStateErrorsModalIsShow(false)}
+        >
+          {stateErrors.map((error) => (
+            <p key={error}>❌ {error}</p>
+          ))}
+        </MessageBox>
       </Show>
     </div>
   );
