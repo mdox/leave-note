@@ -2,9 +2,22 @@
 
 Web App for centralized place for text notes for multiple users.
 
+# Motivation
+
+Want an isolated minimal environment to share texts with others online.
+
+# Stages/Goals
+
+1. [x] Make notes in closed system
+1. [ ] Restrict operations for logged in user only (Authentication and authorization)
+1. [ ] Logged in user can invite other users (Google, GitHub, etc...)
+1. [ ] User Roles
+1. [ ] Group entity for Note entities and Users
+1. [ ] Comment function for created Notes
+
 # Model
 
-Web <-> Server <-> Middleware <-> Controller <-> Service <-> DAO <-> Database
+Web <-> Server ~~<-> Middleware~~ <-> Controller <-> Service <-> DAO <-> Database
 
 # Dependency Programs
 
@@ -12,7 +25,7 @@ Web <-> Server <-> Middleware <-> Controller <-> Service <-> DAO <-> Database
 - nodejs
 - docker
 - docker-compose
-- postgresql (dockerized!)
+- postgresql (dockerized)
 
 # Dependency Utilities
 
